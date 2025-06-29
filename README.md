@@ -1,347 +1,331 @@
+# Strapi Submenus – React Fundamental Project 13
 
 <img width="1149" alt="Screenshot 2025-02-09 at 16 26 39" src="https://github.com/user-attachments/assets/3a8394f6-c5a8-4af3-9705-7fd5d48886b6" />
 
-## Strapi Submenus - React Fundamental Project 13
+---
 
-This project demonstrates a responsive navigation menu with submenus using React. It includes a global context for managing the sidebar state and dynamic rendering of submenus based on the data provided.
+A hands-on project demonstrating how to build a modern, fully responsive navigation system with submenus in React. This app showcases component-driven design, React Context for state management, dynamic rendering of menu structures, and advanced CSS for a sophisticated user experience. It is an excellent resource for learning and teaching React fundamentals, state patterns, and interface design.
 
-**Online Live:** https://strapi-submenus-arnob.netlify.app/
+- **Live Demo:** [https://strapi-submenus-arnob.netlify.app/](https://strapi-submenus-arnob.netlify.app/)
 
-## Setup
+---
 
-1. Install Dependencies:
+## Table of Contents
 
-```sh
-npm install
+1. [Project Summary](#project-summary)
+2. [Features](#features)
+3. [Technology Stack](#technology-stack)
+4. [Project Structure](#project-structure)
+5. [How It Works](#how-it-works)
+6. [Setup & Running Instructions](#setup--running-instructions)
+7. [Component Walkthrough](#component-walkthrough)
+8. [Data and Context](#data-and-context)
+9. [Styling & UX](#styling--ux)
+10. [Teaching & Learning Notes](#teaching--learning-notes)
+11. [Example Code Snippets](#example-code-snippets)
+12. [Conclusion](#conclusion)
+
+---
+
+## Project Summary
+
+Strapi Submenus is an educational project designed to teach and demonstrate:
+
+- How to build a responsive navigation bar with submenus using React.
+- Usage of React Context and custom hooks for global state management.
+- Dynamic rendering of UI based on structured data.
+- Clean, scalable, and component-driven code structure.
+- Advanced CSS including 3D effects and transitions for an engaging user experience.
+
+---
+
+## Features
+
+- Responsive sidebar and submenu navigation, adapting to desktop and mobile layouts.
+- Dynamic submenu content rendered from a single data source.
+- Global context for managing sidebar and submenu open/close state.
+- Clean UI using modern CSS, including transitions and 3D submenu effects.
+- Keyboard and mouse event handling for a smooth UX.
+- Code structure ideal for learning and further extension.
+
+---
+
+## Technology Stack
+
+- **React** (Functional components, hooks)
+- **React Context API** (for global state)
+- **Vite** (for fast development/build)
+- **React Icons** (for iconography)
+- **NanoID** (for unique IDs)
+- **CSS Variables & Modern CSS** (for styling)
+
+---
+
+## Project Structure
+
+```
+Strapi-Submenus--React-Fundamental-Project-13/
+│
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── App.jsx
+│   ├── Context.jsx
+│   ├── Hero.jsx
+│   ├── Navbar.jsx
+│   ├── Sidebar.jsx
+│   ├── Submenu.jsx
+│   ├── data.jsx
+│   └── index.css
+├── index.html
+├── package.json
+└── README.md
 ```
 
-2. Run the Project:
+**Key Files:**
+- `App.jsx` – Main entry, renders all UI components
+- `Context.jsx` – Provides global state (sidebar/submenu open, pageId, handlers)
+- `Navbar.jsx` – Top navigation bar, logo, and toggle button
+- `Hero.jsx` – Main hero banner/content
+- `Sidebar.jsx` – Sidebar navigation with grouped links
+- `Submenu.jsx` – Floating submenu based on hovered link
+- `data.jsx` – Structured data source for pages and links
+- `index.css` – All global and component styles
+- `index.html` – Single-page app root
 
-```sh
-npm run dev
+---
+
+## How It Works
+
+1. **Data-driven UI:** All navigation links and submenus are defined in `data.jsx` as an array of pages, each with its own links and icons.
+2. **Global Context:** The `Context.jsx` file exposes state and handlers for opening/closing the sidebar and submenu, as well as tracking the currently active submenu (`pageId`).
+3. **Sidebar & Submenu:** 
+   - The sidebar displays all navigation groups and their sublinks, shown/hidden via context state and animated with CSS.
+   - The submenu appears near the hovered navigation link, dynamically displaying relevant sublinks based on the current `pageId`.
+4. **Responsive & Accessible:** The navigation adapts to screen size, showing the sidebar toggle on mobile and horizontal nav with submenus on desktop.
+5. **Advanced CSS:** Includes 3D transforms for the submenu, smooth transitions, and responsive layouts.
+
+---
+
+## Setup & Running Instructions
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/arnobt78/Strapi-Submenus--React-Fundamental-Project-13.git
+   cd Strapi-Submenus--React-Fundamental-Project-13
+   ```
+
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+
+3. **Run the development server:**
+   ```sh
+   npm run dev
+   ```
+
+4. **Open in your browser:**
+   - Visit `http://localhost:5173` (or the URL provided in your terminal).
+
+---
+
+## Component Walkthrough
+
+### App.jsx
+
+```javascript
+import Hero from './Hero';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+import Submenu from './Submenu';
+
+const App = () => (
+  <main>
+    <Navbar />
+    <Hero />
+    <Sidebar />
+    <Submenu />
+  </main>
+);
+
+export default App;
 ```
 
-## Project Details and Steps
+---
 
-### Data and Global Context
+### Navbar.jsx
 
-Explore the data.jsx file. Set up a global context with an isSidebarOpen state value (boolean) and two functions: one to close and the other to open the sidebar. Make all of these values available in the application.
+- Displays the logo and sidebar toggle button.
+- Renders navigation links (from data).
+- Uses context to open sidebar and set active submenu.
 
-### Components
+---
 
-Create four components: Navbar, Hero, Sidebar, and Submenu.
+### Sidebar.jsx
 
-### Navbar
+```javascript
+import { FaTimes } from 'react-icons/fa';
+import { useGlobalContext } from './Context';
+import sublinks from './data';
 
-In the Navbar, for now, set up a logo (h3) and a button to open the sidebar. Grab the openSidebar function from the global context. Optionally, you can install and set up an icon from react-icons in the toggle button. Add CSS for the Navbar.
+const Sidebar = () => {
+  const { isSidebarOpen, closeSidebar } = useGlobalContext();
+  return (
+    <aside className={isSidebarOpen ? 'sidebar show-sidebar' : 'sidebar'}>
+      <div className='sidebar-container'>
+        <button className='close-btn' onClick={closeSidebar}>
+          <FaTimes />
+        </button>
+        <div className='sidebar-links'>
+          {sublinks.map(({ links, page, pageId }) => (
+            <article key={pageId}>
+              <h4>{page}</h4>
+              <div className='sidebar-sublinks'>
+                {links.map(({ url, icon, label, id }) => (
+                  <a key={id} href={url}>
+                    {icon}
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </aside>
+  );
+};
+export default Sidebar;
+```
 
-### Hero
+---
 
-Set up a Hero component and add CSS.
+### Submenu.jsx
 
-### Sidebar
+- Listens for the current `pageId` from context.
+- Dynamically renders the submenu for the active page.
+- Uses advanced CSS for 3D effect and smooth appearance/disappearance.
 
-In the Sidebar component, import sublinks from data.jsx, iterate over the list, and display links in the component. Set up the Sidebar CSS. Use the isSidebarOpen and closeSidebar functions from the global context to show/hide the sidebar.
+---
 
-### NavLinks
+### Hero.jsx
 
-Set up NavLinks in the Navbar. Import sublinks from data and iterate over them to render pages on the screen. Set up a NavLink CSS.
+Displays a welcoming hero section:
 
-### Submenu
+```javascript
+const Hero = () => (
+  <div className='hero-container'>
+    <div className='hero-center'>
+      <h1>
+        Manage Any Content <br /> Anywhere
+      </h1>
+      <p>
+        Strapi is the leading open-source headless CMS. It’s 100% JavaScript and fully customizable.
+      </p>
+    </div>
+  </div>
+);
+export default Hero;
+```
 
-Set up a Submenu component with some general CSS. In the global context, set up a pageId with a default value of null and make it available in the app. In the NavLinks component, once the user moves the mouse over the link, set the pageId with the specific page ID. In the Submenu component, grab the pageId from the global context. Based on that ID, get the specific page from sublinks and render the page and links in the submenu. Add CSS to the Submenu component.
+---
 
-### Edge Cases
+## Data and Context
 
-Fix multiple edge cases.
+### `data.jsx` Example
 
-The flow of the application should look something like this:
+```javascript
+const sublinks = [
+  {
+    pageId: nanoid(),
+    page: 'product',
+    links: [
+      {
+        id: nanoid(),
+        label: 'community',
+        icon: <Fa500Px />,
+        url: '/product/community',
+      },
+      // ...more links
+    ],
+  },
+  // ...more pages
+];
 
-- Explore the data.jsx file. Set up a global context with an isSidebarOpen state value (boolean) and two functions: one to close and the other to open the sidebar. Make all of these values available in the application.
+export default sublinks;
+```
 
-- Create four components: Navbar, Hero, Sidebar, and Submenu.
+### Global Context (`Context.jsx`)
 
-- In the Navbar, for now, set up a logo (h3) and a button to open the sidebar. Grab the openSidebar function from the global context. Optionally, you can install and set up an icon from react-icons in the toggle button. Add CSS for the Navbar.
+- Holds `isSidebarOpen`, `isSubmenuOpen`, `pageId`, and functions for opening/closing sidebar and submenu.
+- Provides a custom hook `useGlobalContext` for easy state access in components.
+- Ensures all components are synchronized and use a single source of truth for navigation state.
 
-- Set up a Hero component and add CSS.
+---
 
-- In the Sidebar component, import sublinks from data.jsx, iterate over the list, and display links in the component. Set up the Sidebar CSS. Use the isSidebarOpen and closeSidebar functions from the global context to show/hide the sidebar.
+## Styling & UX
 
-- Set up NavLinks in the Navbar. Import sublinks from data and iterate over them to render pages on the screen. Set up a NavLink CSS.
-
-- Set up a Submenu component with some general CSS. In the global context, set up a pageId with a default value of null and make it available in the app. In the NavLinks component, once the user moves the mouse over the link, set the pageId with the specific page ID. In the Submenu component, grab the pageId from the global context. Based on that ID, get the specific page from sublinks and render the page and links in the submenu. Add CSS to the Submenu component.
-
-- Fix multiple edge cases.
-
-### CSS
-
-```css
-body {
-  background: var(--primary-500);
-}
-/* 
-============= 
-Nav
-=============== 
-*/
-nav {
-  height: 5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.nav-center {
-  width: var(--fluid-width);
-  max-width: var(--max-width);
-  display: flex;
-  justify-content: space-between;
-}
-
-.logo {
-  text-transform: none;
-  color: var(--white);
-  letter-spacing: 2px;
-  font-weight: 700;
-}
-.toggle-btn {
-  width: 2rem;
-  height: 2rem;
-  background: var(--white);
-  color: var(--primary-700);
-  border-radius: var(--borderRadius);
-  border-color: transparent;
-  transition: var(--transition);
-  cursor: pointer;
-}
-.toggle-btn:hover {
-  transform: scale(1.05);
-}
-
-/* 
-============= 
-Hero
-=============== 
-*/
-.hero-container {
-  min-height: calc(100vh - 10rem);
-  display: grid;
-  place-items: center;
-}
-.hero-center {
-  color: var(--white);
-  width: var(--fluid-width);
-  max-width: var(--max-width);
-}
-.hero-center h1 {
-  font-size: clamp(3rem, 5vw, 5rem);
-  margin-bottom: 1rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-.hero-center p {
-  line-height: 1.5rem;
-}
-
-@media screen and (min-width: 992px) {
-  .hero-center {
-    text-align: center;
-  }
-  .hero-center p {
-    max-width: 35em;
-    margin: 0 auto;
-  }
-  .toggle-btn {
-    display: none;
-  }
-}
-
-/* 
-============= 
-Sidebar
-=============== 
-*/
-
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--white);
-  /* toggle stuff */
-  opacity: 0;
-  visibility: hidden;
-}
-/* toggle class */
-.show-sidebar {
-  opacity: 1;
-  visibility: visible;
-  transition-property: opacity;
-  transition-duration: 1s;
-}
-.sidebar-container {
-  padding: 4rem 2rem;
-  position: relative;
-}
-.close-btn {
-  font-size: 2rem;
-  background: transparent;
-  border-color: transparent;
-  color: var(--primary-500);
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-}
-.sidebar article {
-  margin-bottom: 2rem;
-}
-.sidebar h4 {
-  margin-bottom: 1rem;
-  color: var(--primary-700);
-}
-.sidebar-sublinks {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  row-gap: 0.5rem;
-}
-.sidebar-sublinks a {
-  display: block;
-  color: var(--grey-900);
-  text-transform: capitalize;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.sidebar-sublinks svg {
-  color: var(--grey-500);
-}
-
-@media screen and (min-width: 992px) {
-  .sidebar {
-    display: none;
-  }
-}
-
-/* 
-============= 
-NavLinks
-=============== 
-*/
-
-.nav-links {
-  display: none;
-}
-
-@media screen and (min-width: 992px) {
-  .nav-links {
-    display: flex;
-    justify-content: center;
-    align-self: stretch;
-    z-index: 1;
-  }
-  .nav-center {
-    align-self: stretch;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    /* border: 2px solid red; */
-  }
-  .logo {
-    align-self: center;
-  }
-  .nav-link {
-    padding: 0 1rem;
-    color: var(--white);
-    background: transparent;
-    border-color: transparent;
-    font-size: 1.25rem;
-    text-transform: capitalize;
-    letter-spacing: var(--letterSpacing);
-    cursor: pointer;
-    /* border: 2px solid green; */
-  }
-}
-
-/* 
-============= 
-Submenu
-=============== 
-*/
-
-.submenu {
-  display: none;
-}
-
-@media screen and (min-width: 992px) {
+- **CSS Variables:** Used for colors, spacing, and responsive breakpoints.
+- **Sidebar & Submenu:** CSS transitions and classes like `.show-sidebar` or `.show-submenu` control visibility.
+- **3D Submenu Effect:**
+  ```css
   .submenu {
-    display: block;
-    position: fixed;
-    top: 6rem;
-    left: 50%;
-    width: var(--fluid-width);
-    max-width: var(--max-width);
-    background: var(--white);
-    border-radius: var(--borderRadius);
-    padding: 2rem;
-
     transform: rotateX(-90deg) translateX(-50%);
     transform-origin: top;
     perspective: 1000px;
-    /* toggle stuff */
-    visibility: hidden;
-    opacity: 0;
-    transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
-    /* border: 2px solid red; */
+    transition: transform 0.3s, opacity 0.2s;
+    /* ... */
   }
   .show-submenu {
     opacity: 1;
     visibility: visible;
     transform: rotateX(0deg) translate(-50%);
   }
-  .submenu h5 {
-    margin-bottom: 1rem;
-    color: var(--primary-700);
-  }
-  .submenu-links {
-    display: grid;
-    row-gap: 0.5rem;
-  }
-  .submenu-links a {
-    display: block;
-    color: var(--grey-900);
-    text-transform: capitalize;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .submenu-links svg {
-    color: var(--grey-500);
-  }
-}
+  ```
+- **Responsive Design:** Media queries hide the sidebar on desktop and show nav links, and vice versa on mobile.
+
+---
+
+## Teaching & Learning Notes
+
+- **React Fundamentals:** Project covers components, props, state, context, and hooks.
+- **Context API:** Centralizes UI state for clean, maintainable code.
+- **Dynamic Rendering:** Menus and submenus created from a single data source demonstrate scalability.
+- **CSS Mastery:** Shows real-world usage of variables, transitions, and 3D transforms.
+- **Event Handling:** Mouse and click events manage opening/closing of menus, ensuring an interactive UX.
+
+---
+
+## Example Code Snippets
+
+### Opening the Sidebar
+
+```javascript
+const { openSidebar } = useGlobalContext();
+<button className="toggle-btn" onClick={openSidebar}>Open Sidebar</button>
 ```
 
-### 3D Effect
+### Rendering NavLinks
 
-These lines of CSS are used to apply a 3D transformation to an element on a webpage. Here's what each line does:
+```javascript
+{ sublinks.map(({ page, pageId }) => (
+  <button
+    key={pageId}
+    className="nav-link"
+    onMouseOver={() => setPageId(pageId)}
+  >
+    {page}
+  </button>
+))}
+```
 
-transform: rotateX(-90deg) translateX(-50%);
-The transform property applies a transformation to an element. In this case, it applies two transformations: rotateX(-90deg) and translateX(-50%).
+---
 
-rotateX(-90deg) rotates the element around the X-axis by -90 degrees, which means it will appear to be flipped upside down.
-translateX(-50%) moves the element horizontally by -50% of its own width, effectively shifting it to the left.
-Together, these transformations make the element appear to be rotated and tilted, as if it's viewed from above and at an angle.
+## Conclusion
 
-transform-origin: top;
-The transform-origin property specifies the point around which the element should be rotated and transformed. In this case, it's set to top, which means the transformation should be applied around the top edge of the element.
+This project is an excellent teaching tool for React developers looking to master component-driven development, state management with context, and modern CSS techniques. It’s a scalable, real-world example of how to architect a professional navigation system. You can use it as a template for your own apps, or as a step-by-step tutorial for others.
 
-perspective: 1000px;
-The perspective property defines the distance between the viewer and the element, and affects the appearance of 3D transformations. In this case, it's set to 1000px, which means the element will appear to be tilted and rotated as if it's viewed from a distance of 1000 pixels.
+Explore, modify, and extend – happy coding!
 
-Overall, these lines of CSS are used to create a 3D effect for an element, making it appear to be tilted and rotated in a particular way.
-
-### Mouse Events
-
-onMouseEnter: This event is triggered when the mouse cursor enters the target element. It can be used to trigger an action when the user hovers over an element.
-
-onMouseOver: This event is triggered when the mouse cursor is moved over the target element or any of its child elements. It can be used to track the mouse movement and trigger actions accordingly.
-
-onMouseLeave: This event is triggered when the mouse cursor leaves the target element. It can be used to trigger an action when the user stops hovering over an element.
+---
